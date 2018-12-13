@@ -44,12 +44,12 @@ public class TestFacadeRest {
     // test sans
     // alfresco////////////////////////////////////////////////////////////////
 
-    @GetMapping(path = "/test-upload-document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/test-upload-document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CivadisDocument> testUploadDocument(@RequestParam("file") MultipartFile fileRef,
             @RequestParam("parent") String parentPath,
             @RequestParam(value = "description", required = false) String description) throws IOException {
 
-        File tmp = new File("/home/vagrant/testupload");
+        File tmp = new File("/home/vagrant/testuploadeddoc");
         try (InputStream in = fileRef.getInputStream()) {
             Files.copy(in, tmp.toPath(), StandardCopyOption.REPLACE_EXISTING);
             CivadisDocument doc = new CivadisDocument();
@@ -60,7 +60,7 @@ public class TestFacadeRest {
     @GetMapping(path = "/test-download-document", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<org.springframework.core.io.Resource> testDownloadDocument(@RequestParam("id") String id)
             throws FileNotFoundException, IOException {
-        File tmp = new File("/home/vagrant/testupload");
+        File tmp = new File("/home/vagrant/testuploadeddoc");
         try (InputStream in = new FileInputStream(tmp)) {
             MediaType type = MediaType.APPLICATION_OCTET_STREAM;
             return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM)
