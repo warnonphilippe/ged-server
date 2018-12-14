@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -57,15 +58,15 @@ public class TestFacadeRest {
         }
     }
 
-    @GetMapping(path = "/test-download-document", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @GetMapping(path = "/test-download-document") // produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
     public ResponseEntity<org.springframework.core.io.Resource> testDownloadDocument(@RequestParam("id") String id)
             throws FileNotFoundException, IOException {
         File tmp = new File("/Users/philippe/testuploadeddoc");
-        try (InputStream in = new FileInputStream(tmp)) {
-            MediaType type = MediaType.APPLICATION_OCTET_STREAM;
-            return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM)
-                    .body(new InputStreamResource(in));
-        }
+        InputStream in = new FileInputStream(tmp);
+        // Attention, si on close l'inputstream en l'incluant dans un try(...),
+        // spring ne peut pas le lire et génère une erreur lors de l'envoi
+        MediaType type = MediaType.APPLICATION_OCTET_STREAM;
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(new InputStreamResource(in));
     }
 
     @GetMapping(path = "/test-documents")
