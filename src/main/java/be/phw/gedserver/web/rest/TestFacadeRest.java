@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor;
 
+import be.phw.gedserver.domain.CivadisDocument;
+
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,7 +47,22 @@ public class TestFacadeRest {
     // test sans
     // alfresco////////////////////////////////////////////////////////////////
 
-    @PostMapping(path = "/test-upload-document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @GetMapping(path = "/test-documents")
+    public ResponseEntity<List<CivadisDocument>> testDocuments(
+            @RequestParam(name = "parent", required = false) String parent) {
+        CivadisDocument doc1 = new CivadisDocument();
+        doc1.setName("testdoc1");
+        CivadisDocument doc2 = new CivadisDocument();
+        doc2.setName("testdoc2");
+        return ResponseEntity.ok(Arrays.asList(doc1, doc2));
+    }
+
+    @PostMapping(path = "/test-post-document")
+    public ResponseEntity<CivadisDocument> testPostDocument(@RequestBody CivadisDocument doc) throws IOException {
+        return ResponseEntity.ok(doc);
+    }
+
+    @PostMapping(path = "/test-upload-document") // consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     public ResponseEntity<CivadisDocument> testUploadDocument(@RequestParam("file") MultipartFile fileRef,
             @RequestParam("parent") String parentPath,
             @RequestParam(value = "description", required = false) String description) throws IOException {
@@ -67,28 +84,6 @@ public class TestFacadeRest {
         // spring ne peut pas le lire et génère une erreur lors de l'envoi
         MediaType type = MediaType.APPLICATION_OCTET_STREAM;
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(new InputStreamResource(in));
-    }
-
-    @GetMapping(path = "/test-documents")
-    public ResponseEntity<List<CivadisDocument>> testDocuments(
-            @RequestParam(name = "parent", required = false) String parent) {
-        CivadisDocument doc1 = new CivadisDocument();
-        doc1.setName("testdoc1");
-        CivadisDocument doc2 = new CivadisDocument();
-        doc2.setName("testdoc2");
-        return ResponseEntity.ok(Arrays.asList(doc1, doc2));
-    }
-
-    public class CivadisDocument {
-        private String name;
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
     }
 
 }
