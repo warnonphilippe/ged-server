@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor;
 
 import be.phw.gedserver.domain.CivadisDocument;
+import be.phw.gedserver.security.SecurityUtils;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -50,6 +51,9 @@ public class TestFacadeRest {
     @GetMapping(path = "/test-documents")
     public ResponseEntity<List<CivadisDocument>> testDocuments(
             @RequestParam(name = "parent", required = false) String parent) {
+        if (SecurityUtils.getCurrentUserLogin().isPresent()) {
+            System.out.println("Current User : " + SecurityUtils.getCurrentUserLogin().get());
+        }
         CivadisDocument doc1 = new CivadisDocument();
         doc1.setName("testdoc1");
         CivadisDocument doc2 = new CivadisDocument();
