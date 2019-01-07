@@ -521,10 +521,14 @@ public class FacadeRest {
     }
     
     private ResponseEntity<org.springframework.core.io.Resource> getResource() throws FileNotFoundException, IOException {
-        try(InputStream in = new FileInputStream(new File("/Users/philippe/tmp/test.docx"))) {
-            return ResponseEntity.ok().body(new InputStreamResource(in));
-        } 
+        File tmp = new File("/Users/philippe/tmp/test.docx");
+        InputStream in = new FileInputStream(tmp);
+        // Attention, si on close l'inputstream en l'incluant dans un try(...),
+        // spring ne peut pas le lire et génère une erreur lors de l'envoi
+        MediaType type = MediaType.APPLICATION_OCTET_STREAM;
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(new InputStreamResource(in));
     }
+
 
     
 
