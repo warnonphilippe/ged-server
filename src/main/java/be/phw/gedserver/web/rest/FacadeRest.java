@@ -425,7 +425,7 @@ public class FacadeRest {
         @ApiParam(name="sourceMimeType", value="mimetype du fichier à convertir", required = true) @RequestParam("sourceMimeType") String sourceMimeType,
         @ApiParam(name="destMimeType", value="mimetype dans lequel convertir", required = true) @RequestParam("destMimeType") String destMimeType,
         @ApiParam(name="engineType", value = "type de moteur de conversion (office ou libreoffice)") @RequestParam(value="engineType", required = false) String engineType) throws IOException {
-        return null;
+        return getResource();
     }
 
     /**
@@ -487,7 +487,7 @@ public class FacadeRest {
         @ApiParam(name="mergeType", value="type de fusion", required = true) @RequestParam("mergeType") String mergeType,
         @ApiParam(name="destMimeType", value="mime type du fichier de fusion") @RequestParam(value="destMimeType", required=false) String destMimeType) throws Exception {
 
-        return null;
+        return getResource();
     }
 
     //test sans alfresco////////////////////////////////////////////////////////////////
