@@ -12,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang.text.StrBuilder;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
@@ -241,7 +242,7 @@ public class FacadeRest {
     /**
      * Upload le fichier référencer par fileRef sous le répertoire parentPath
      * Si le fichier est déjà présent, upload en incrémentant la version
-     * Si un targetName est fourni, le fichier sera converti et stocké sous ce nom
+     * Si un targetName est fourni, le fichier sera stocké sous ce nom
      * @param fileRef référence au fichier à uploader
      * @param parentPath path du répertoire sous lequel placer le fichier
      * @return
@@ -253,9 +254,10 @@ public class FacadeRest {
     public ResponseEntity<CivadisDocument> uploadDocument(
         @ApiParam(name="file", value = "fichier à uploader", required = true) @RequestParam("file") MultipartFile fileRef,
         @ApiParam(name="parent", value = "path du répertoire parent", required = true) @RequestParam("parent") String parentPath,
+        @ApiParam(name="targetName", value = "nom de la cible") @RequestParam(value="targetName", required=false) String targetName,
         @ApiParam(name="description", value = "description du fichier") @RequestParam(value="description", required = false) String description
     ) throws IOException {
-        return ResponseEntity.ok(getCivadisDocument("1", parentPath + "/...", fileRef.getName(), false, "upload"));
+        return ResponseEntity.ok(getCivadisDocument("1", parentPath + "/" + targetName, targetName, false, "upload"));
     }
 
     //l'url ne peut pas contenir un argument contenant des caractères spéciaux, on passe l'id par des requestParam
